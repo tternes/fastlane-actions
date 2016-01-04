@@ -29,7 +29,7 @@ module Fastlane
         
         if params[:increment]
           Helper.log.info "Requesting next version for build #{build_id}"
-          request = Net::HTTP::Post.new(uri.request_uri)
+          request = Net::HTTP::Put.new(uri.request_uri)
         else
           
           Helper.log.info "Requesting current version for build #{build_id}"
