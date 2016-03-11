@@ -11,8 +11,8 @@ module Fastlane
         require "json"
         require "net/http"
         require "uri"
-        
-        buildnumber_xyz_host = "http://buildnumber.parseapp.com"
+
+        buildnumber_xyz_host = "http://buildnumber.xyz"
         build_id = params[:build_id]
         increment = params[:increment]
         Helper.log.debug "build_id: #{build_id}"
