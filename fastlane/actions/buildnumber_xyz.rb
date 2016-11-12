@@ -15,8 +15,8 @@ module Fastlane
         buildnumber_xyz_host = "http://buildnumber.xyz"
         build_id = params[:build_id]
         increment = params[:increment]
-        Helper.log.debug "build_id: #{build_id}"
-        Helper.log.debug "increment: #{increment}"
+        UI.message "build_id: #{build_id}"
+        UI.message "increment: #{increment}"
 
         uri = URI.parse("#{buildnumber_xyz_host}/builds/#{build_id}")
         http = Net::HTTP.new(uri.host, uri.port)
@@ -28,11 +28,11 @@ module Fastlane
         end
         
         if params[:increment]
-          Helper.log.info "Requesting next version for build #{build_id}"
+          UI.message "Requesting next version for build #{build_id}"
           request = Net::HTTP::Put.new(uri.request_uri)
         else
           
-          Helper.log.info "Requesting current version for build #{build_id}"
+          UI.message "Requesting current version for build #{build_id}"
           request = Net::HTTP::Get.new(uri.request_uri)
         end
 
@@ -43,18 +43,17 @@ module Fastlane
             result = JSON.parse(response.body)
             current = result["current"]
           
-            Helper.log.info "Service returned version #{current}"
+            UI.success "Service returned version #{current}"
           else
             Helper.log.error "Status code: " + response.code
             response.each_header do |header_name, header_value|
               Helper.log.error header_name + ":" + header_value
             end
-            Helper.log.error response.body
-
-            throw "unexpected response from buildnumber.xyz"
+            UI.important response.body
+            UI.error "unexpected response from buildnumber.xyz"
           end
         else
-          Helper.log.info "Skipping request to service #{current}"
+          UI.message "Skipping request to service #{current}"
         end
         
         Actions.lane_context[SharedValues::BUILDNUMBER_XYZ_CURRENT_BUILD] = current

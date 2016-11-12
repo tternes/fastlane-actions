@@ -11,10 +11,10 @@ module Fastlane
         require "net/http"
         require "uri"
 
-        Helper.log.info "Using API Token: #{params[:device_token]}"
+        UI.message "Using API Token: #{params[:device_token]}"
 
         device_url = "https://pactola.io/#{params[:device_token]}/notification"
-        Helper.log.debug "device_url: #{device_url}"
+        UI.message "device_url: #{device_url}"
 
         uri = URI.parse(device_url)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -25,15 +25,14 @@ module Fastlane
         response = http.request(request)
 
         if response.code == "202"
-          Helper.log.info "Service returned 202 successfully"
+          UI.success "Service returned 202 successfully"
         else
-          Helper.log.error "Status code: " + response.code
+          UI.message "Status code: " + response.code
           response.each_header do |header_name, header_value|
             Helper.log.error header_name + ":" + header_value
           end
-          Helper.log.error response.body
-
-          throw "unexpected response from pactola.io"
+          UI.message response.body
+          UI.error "unexpected response from pactola.io"
         end
       end
 
