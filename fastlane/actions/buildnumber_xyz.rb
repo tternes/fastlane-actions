@@ -45,9 +45,9 @@ module Fastlane
           
             UI.success "Service returned version #{current}"
           else
-            Helper.log.error "Status code: " + response.code
+            UI.error "Status code: " + response.code
             response.each_header do |header_name, header_value|
-              Helper.log.error header_name + ":" + header_value
+              UI.error header_name + ":" + header_value
             end
             UI.important response.body
             UI.error "unexpected response from buildnumber.xyz"
